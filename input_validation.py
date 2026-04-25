@@ -1,5 +1,6 @@
 from datetime import datetime, date, time
 
+
 def get_valid_string(prompt):
     """Return a non-empty string from the user."""
     while True:
@@ -22,11 +23,44 @@ def get_valid_positive_float(prompt):
             print("  ⚠ Please enter a valid number (e.g. 2.5).")
 
 
-# Assignment-specific validators
+# ── NEW: General-purpose range validators ────────────────────────────────────
 
+def get_valid_percentage(prompt):
+    """
+    Return a float between 0 and 100 (inclusive) from the user.
+    Used for grade-weight inputs (e.g. homework = 30% of final grade).
+    """
+    while True:
+        raw = input(f"  {prompt}").strip()
+        try:
+            value = float(raw)
+            if 0.0 <= value <= 100.0:
+                return value
+            print("  ⚠ Value must be between 0 and 100.")
+        except ValueError:
+            print("  ⚠ Please enter a valid number (e.g. 30).")
+
+
+def get_valid_priority(prompt):
+    """
+    Return an integer between 1 and 99 from the user.
+    Priority 100 is reserved for system-level items (classes & sleep).
+    """
+    while True:
+        raw = input(f"  {prompt}").strip()
+        try:
+            value = int(raw)
+            if 1 <= value <= 99:
+                return value
+            print("  ⚠ Priority must be between 1 and 99.")
+            print("  ⚠ (100 is reserved for classes and sleep.)")
+        except ValueError:
+            print("  ⚠ Please enter a whole number between 1 and 99.")
+
+
+# ── Assignment-specific validators ───────────────────────────────────────────
 
 def get_valid_assignment_type(prompt, types):
-
     print(f"\n  {prompt}:")
     for i, t in enumerate(types, start=1):
         print(f"    {i}. {t}")
@@ -43,7 +77,6 @@ def get_valid_assignment_type(prompt, types):
 
 
 def get_valid_due_date(prompt):
-
     while True:
         raw = input(f"  {prompt}").strip()
         try:
@@ -57,10 +90,10 @@ def get_valid_due_date(prompt):
 
 
 def get_valid_study_hours(prompt):
-
     return get_valid_positive_float(prompt)
 
-# Schedule-specific validators
+
+# ── Schedule-specific validators ─────────────────────────────────────────────
 
 DAY_ABBREVIATIONS = {
     "mon": "Monday",
@@ -70,19 +103,17 @@ DAY_ABBREVIATIONS = {
     "fri": "Friday",
     "sat": "Saturday",
     "sun": "Sunday",
-    # Also allow full names
-    "monday": "Monday",
-    "tuesday": "Tuesday",
+    "monday":    "Monday",
+    "tuesday":   "Tuesday",
     "wednesday": "Wednesday",
-    "thursday": "Thursday",
-    "friday": "Friday",
-    "saturday": "Saturday",
-    "sunday": "Sunday",
+    "thursday":  "Thursday",
+    "friday":    "Friday",
+    "saturday":  "Saturday",
+    "sunday":    "Sunday",
 }
 
 
 def get_valid_days_of_week(prompt, all_days):
-
     print(f"  Available days: Mon, Tue, Wed, Thu, Fri, Sat, Sun")
     while True:
         raw = input(f"  {prompt}").strip()
@@ -108,7 +139,6 @@ def get_valid_days_of_week(prompt, all_days):
 
 
 def get_valid_time(prompt):
-
     while True:
         raw = input(f"  {prompt}").strip()
         try:
@@ -119,7 +149,6 @@ def get_valid_time(prompt):
 
 
 def get_valid_end_time(prompt, start_time):
-
     while True:
         end = get_valid_time(prompt)
         if end > start_time:
