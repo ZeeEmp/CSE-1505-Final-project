@@ -11,10 +11,10 @@ from input_validation import (
 )
 from display import print_divider, print_section
 
-# ── Persistence ───────────────────────────────────────────────────────────────
+# Persistence
 SCHEDULE_FILE = "data/schedule.json"
 
-# ── Priority constants ────────────────────────────────────────────────────────
+# Priority constants
 PRIORITY_MAX = 100   # reserved for classes and sleep – never lower
 
 DAYS_OF_WEEK = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
@@ -23,20 +23,17 @@ DAYS_OF_WEEK = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturda
 _schedule = []
 
 
-# ── JSON helpers ──────────────────────────────────────────────────────────────
+# JSON helpers
 
 def _time_to_str(t) -> str:
-    """Serialise a time object to 'HH:MM' for JSON storage."""
     return t.strftime("%H:%M")
 
 
 def _str_to_time(s: str):
-    """Deserialise a 'HH:MM' string from JSON back to a time object."""
     return datetime.strptime(s, "%H:%M").time()
 
 
 def save_schedule():
-    """Write the current in-memory schedule to data/schedule.json."""
     os.makedirs(os.path.dirname(SCHEDULE_FILE), exist_ok=True)
     payload = []
     for course in _schedule:
@@ -57,7 +54,6 @@ def save_schedule():
 
 
 def load_schedule():
-    """Load schedule from data/schedule.json into _schedule (called at startup)."""
     global _schedule
     if not os.path.exists(SCHEDULE_FILE):
         return
@@ -81,10 +77,9 @@ def load_schedule():
         print(f"  ⚠ Could not load schedule ({e}). Starting fresh.")
 
 
-# ── CRUD ──────────────────────────────────────────────────────────────────────
+# CRUD
 
 def add_class():
-    """Prompt the user to enter course info and add it to the schedule."""
     print_section("Enter Class Schedule")
 
     while True:
@@ -105,7 +100,7 @@ def add_class():
             start_time
         )
 
-        # ── Grade weights (drive assignment-priority calculations) ────────────
+        # Grade weights (drive assignment-priority calculations)
         print("\n  Enter grade weights for this course.")
         print("  These percentages adjust assignment priorities automatically.")
         homework_weight = get_valid_percentage("  Homework % of final grade  (e.g. 30): ")
@@ -162,7 +157,7 @@ def get_schedule():
     return _schedule
 
 
-# ── Time-query helpers ────────────────────────────────────────────────────────
+# Time-query helpers
 
 def is_class_time(day_name: str, hour_float: float, schedule: list) -> bool:
     """Return True if any class is running during hour_float on day_name."""
@@ -188,20 +183,13 @@ def get_first_class_time(day_name: str, schedule: list):
     return min(times) if times else None
 
 
-# ── Sleep schedule ────────────────────────────────────────────────────────────
+# Sleep schedule
 
 def get_sleep_window(target_date: date, schedule: list):
     """
     Compute an 8-hour sleep window that ends at the first class of the
     *next* day (i.e. the minimum wake-up time needed for tomorrow's class).
-
     Priority = PRIORITY_MAX (100) — sleep cannot be displaced by study tasks.
-
-    Returns:
-        (sleep_start: datetime, wake_up: datetime)  — or None if no class tomorrow.
-
-    Example:
-        First class on Tuesday is 09:00 → sleep 01:00 Mon night → 09:00 Tue.
     """
     next_day      = target_date + timedelta(days=1)
     next_day_name = next_day.strftime("%A")

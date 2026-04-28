@@ -23,7 +23,7 @@ def get_valid_positive_float(prompt):
             print("  ⚠ Please enter a valid number (e.g. 2.5).")
 
 
-# ── NEW: General-purpose range validators ────────────────────────────────────
+# ── NEW: General-purpose range validators
 
 def get_valid_percentage(prompt):
     """
@@ -58,7 +58,7 @@ def get_valid_priority(prompt):
             print("  ⚠ Please enter a whole number between 1 and 99.")
 
 
-# ── Assignment-specific validators ───────────────────────────────────────────
+# Assignment-specific validators
 
 def get_valid_assignment_type(prompt, types):
     print(f"\n  {prompt}:")
@@ -93,7 +93,7 @@ def get_valid_study_hours(prompt):
     return get_valid_positive_float(prompt)
 
 
-# ── Schedule-specific validators ─────────────────────────────────────────────
+# Schedule-specific validators
 
 DAY_ABBREVIATIONS = {
     "mon": "Monday",

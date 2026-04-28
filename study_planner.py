@@ -9,17 +9,10 @@ STUDY_START_HOUR = 8
 STUDY_END_HOUR   = 22
 
 
-# ── Availability helpers ──────────────────────────────────────────────────────
+# Availability helpers
 
 def _sleep_overlap_hours(target_date: date, schedule: list) -> float:
-    """
-    How many hours of the study window [8, 22) on *target_date* are consumed
-    by the sleep block that ends at the first class the next day?
 
-    Usually 0 (sleep is 1–9 AM, outside the 8–22 window), but if tomorrow's
-    first class is very early (e.g. 06:00), bedtime falls inside the study
-    window (22:00 cut-off is still the floor, so the overlap starts there).
-    """
     window = get_sleep_window(target_date, schedule)
     if window is None:
         return 0.0
@@ -59,7 +52,7 @@ def _available_study_hours_on_day(day: date, schedule: list) -> float:
     return min(max(free_hours, 0.0), MAX_HOURS_PER_DAY)
 
 
-# ── Sleep-block builder ───────────────────────────────────────────────────────
+# Sleep-block builder
 
 def _build_sleep_session(target_date: date, schedule: list):
     """
@@ -83,7 +76,7 @@ def _build_sleep_session(target_date: date, schedule: list):
     }
 
 
-# ── Core planner ─────────────────────────────────────────────────────────────
+# Core planner
 
 def generate_study_plan(assignments: list, schedule: list) -> dict:
     """
@@ -99,7 +92,7 @@ def generate_study_plan(assignments: list, schedule: list) -> dict:
     today = date.today()
     plan  = {}   # date → [session, ...]
 
-    # ── Sort assignments: priority DESC, due date ASC ─────────────────────────
+    # Sort assignments: priority DESC, due date ASC
     sorted_assignments = sorted(
         assignments,
         key=lambda a: (-a.get("priority", 30), a["due_date"])
@@ -148,13 +141,13 @@ def generate_study_plan(assignments: list, schedule: list) -> dict:
 
             remaining_hours = round(remaining_hours - session_hours, 2)
 
-    # ── Inject sleep blocks into each plan day ────────────────────────────────
+    # Inject sleep blocks into each plan day
     for day in list(plan.keys()):
         sleep_session = _build_sleep_session(day, schedule)
         if sleep_session:
             plan[day].append(sleep_session)
 
-    # ── Sort sessions within each day: priority DESC ──────────────────────────
+    # Sort sessions within each day: priority DESC
     for day in plan:
         plan[day].sort(key=lambda s: -s.get("priority", 0))
 

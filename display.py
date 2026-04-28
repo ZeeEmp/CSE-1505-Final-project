@@ -1,7 +1,7 @@
 WIDTH = 65  # Console width for dividers and headers
 
 
-# ── Layout helpers ────────────────────────────────────────────────────────────
+# Layout helpers 
 
 def print_divider():
     """Print a full-width horizontal rule."""
@@ -35,7 +35,7 @@ def print_menu(options: list):
     print()
 
 
-# ── Priority legend ───────────────────────────────────────────────────────────
+# Priority legend
 
 def print_priority_legend():
     """
@@ -58,12 +58,10 @@ def print_priority_legend():
     print()
 
 
-# ── Study-plan display ────────────────────────────────────────────────────────
+# Study-plan display 
 
 def print_study_plan(plan: dict):
     """
-    Render the study plan.
-
     Each day shows:
     • 💤 Sleep block (priority 100, top of day, shown with time window)
     • Study sessions in priority order, with [P:xx] badge
@@ -91,12 +89,12 @@ def print_study_plan(plan: dict):
             priority = session.get("priority", "")
             pri_tag  = f" [P:{priority}]" if priority != "" else ""
 
-            # ── Sleep block ───────────────────────────────────────────────────
+            # Sleep block
             if s_type == "Sleep":
                 print(f"     💤 {session['name']}{pri_tag}")
                 continue
 
-            # ── Study session ─────────────────────────────────────────────────
+            # Study session
             hrs         = session["hours"]
             hours_label = f"{hrs:.1f} hr{'s' if hrs != 1 else ''}"
             warning     = session.get("warning", "")

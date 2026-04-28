@@ -10,7 +10,7 @@ from input_validation import (
 )
 from display import print_divider, print_section
 
-# ── Persistence ───────────────────────────────────────────────────────────────
+# Persistence
 ASSIGNMENTS_FILE = "data/assignments.json"
 
 # In-memory store
@@ -18,7 +18,7 @@ _assignments = []
 
 ASSIGNMENT_TYPES = ["Homework", "Quiz", "Project", "Exam", "Lab", "Other"]
 
-# ── Base priorities (0-99; 100 is reserved for classes & sleep) ──────────────
+# Base priorities 100 is reserved for classes & sleep
 # These are the defaults when no course-grade-weight is available.
 # The user may override any value at add-time.
 BASE_PRIORITIES = {
@@ -38,7 +38,7 @@ _WEIGHT_KEY = {
 }
 
 
-# ── Priority helpers ──────────────────────────────────────────────────────────
+# Priority helpers
 
 def compute_priority(a_type: str, course_weight: float = None) -> int:
     """
@@ -54,7 +54,7 @@ def compute_priority(a_type: str, course_weight: float = None) -> int:
     return max(1, min(99, int(raw)))
 
 
-# ── JSON persistence ──────────────────────────────────────────────────────────
+# JSON persistence
 
 def save_assignments():
     """Write the in-memory assignment list to data/assignments.json."""
@@ -97,16 +97,10 @@ def load_assignments():
         print(f"  ⚠ Could not load assignments ({e}). Starting fresh.")
 
 
-# ── CRUD ──────────────────────────────────────────────────────────────────────
+# CRUD
 
 def add_assignment(schedule=None):
-    """
-    Prompt the user to enter a new assignment.
 
-    If a schedule is passed in, the user can optionally link the assignment
-    to a course so that the course's grade weights auto-set the priority.
-    The computed priority is always shown and can be overridden manually.
-    """
     print_section("Add New Assignment")
 
     name    = get_valid_string("Enter assignment name: ")
@@ -114,7 +108,7 @@ def add_assignment(schedule=None):
     due_date = get_valid_due_date("Enter due date (MM/DD/YYYY): ")
     hours   = get_valid_study_hours("Enter estimated study hours needed (e.g. 2.5): ")
 
-    # ── Determine priority ────────────────────────────────────────────────────
+    #Determine priority
     base_p       = BASE_PRIORITIES.get(a_type, 20)
     course_name  = ""
     course_weight = None
@@ -148,8 +142,9 @@ def add_assignment(schedule=None):
 
     computed_p = compute_priority(a_type, course_weight)
 
-    print(f"\n  Computed priority : {computed_p}  "
-          f"(base for {a_type}: {base_p} | 100 = max, reserved for classes/sleep)")
+    print(f"\n  Computed priority base is : {computed_p}  "
+          f"( {a_type}: {base_p} Please input a priority based on the percentage of the grade given to the type of assignment"
+          f"\ni.e: if the class syllabus gives 40% to homework. Set pirority to 40")
     override = input("  Override? Enter 1-99 or press Enter to keep: ").strip()
     if override.isdigit():
         val = int(override)

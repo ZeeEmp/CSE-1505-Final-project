@@ -7,7 +7,7 @@ from display        import print_header, print_menu, print_divider, print_study_
 def main():
     print_header("Study Session Planner")
 
-    # ── Load persisted data at startup ────────────────────────────────────────
+    # ── Load persisted data at startup
     # Order matters: schedule must be loaded first so add_assignment can
     # offer the course-linkage menu immediately on first run.
     load_schedule()
